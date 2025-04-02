@@ -1,9 +1,15 @@
 {
-  "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "strict": true,
     "paths": {
-      "@": ["./src/"],
+      "@/*": ["./src/*"],
+      "@ui-components/*": ["./components/*"],
+      "tailwind.config": [
+        "./tailwind.config.js"
+      ]
     }
-  }
+  },
+  "exclude": [
+    "node_modules"
+  ],
+  "extends": "expo/tsconfig.base"
 }
