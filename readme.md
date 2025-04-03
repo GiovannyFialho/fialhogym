@@ -1,11 +1,12 @@
 # Fialho Gym 💪🏻
 
-Welcome to **Fialho Gym**, an app developed with [Expo](https://expo.dev/) to assist you on your fitness journey! This project is still in its early stages and will be updated with new features over time.
+Welcome to **Fialho Gym**, an app developed with [Expo](https://expo.dev/) to assist you on your fitness journey! This project is evolving, and new features will be added over time.
 
-## 📦 Technologies Used
+## 📞 Technologies Used
 
 - [Expo](https://expo.dev/) - Framework for developing React Native applications.
 - [React Native](https://reactnative.dev/) - Library for building native mobile interfaces.
+- [Gluestack](https://gluestack.io/) - Component library for a scalable and accessible UI.
 - [Roboto Font](https://fonts.google.com/specimen/Roboto) - Custom font for a better visual experience.
 
 ## 🚀 How to Run the Project
@@ -26,6 +27,7 @@ If you want to run the project locally, follow these steps:
    ```
 
 3. **Run the project:**
+
    ```sh
    npx expo start
    ```
@@ -34,14 +36,14 @@ If you want to run the project locally, follow these steps:
 
 - 📋 Workout management
 - 📊 Progress tracking
-- 🏋️‍♂️ Personalized exercise plans
+- 🏅 Personalized exercise plans
 - 🎯 Fitness goal setting
 
 ## 🛠️ Contributing
 
 This project is under development, and all contributions are welcome! If you'd like to help, feel free to open an _issue_ or submit a _pull request_.
 
-## 📄 License
+## 📝 License
 
 This project is licensed under the MIT License. See the `LICENSE` file for more details.
 
