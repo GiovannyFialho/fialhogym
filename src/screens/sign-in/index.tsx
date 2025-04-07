@@ -13,26 +13,31 @@ export function SignIn() {
   return (
     <VStack>
       <Image
-        className="absolute w-full h-[624px]"
+        className="absolute h-[624px] w-full"
         source={BackgroundImg}
         alt="Pessoas treinando"
         defaultSource={BackgroundImg}
       />
 
       <VStack className="px-10 pb-16">
-        <Box className="justify-center items-center my-24">
+        <Box className="my-24 items-center justify-center">
           <Logo />
 
-          <Text className="color-slate-100 text-sm">
+          <Text className="text-sm color-slate-100">
             Treine sua mente e o seu corpo.
           </Text>
         </Box>
 
-        <Box className="justify-center items-center gap-2 my-24">
-          <Heading className="text-gray-100 text-2xl">Acesse a conta</Heading>
+        <Box className="my-24 items-center justify-center gap-2">
+          <Heading className="text-2xl text-gray-100">Acesse a conta</Heading>
 
-          <Input placeholder="E-mail" />
-          <Input placeholder="Senha" />
+          <Input
+            placeholder="E-mail"
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
+
+          <Input placeholder="Senha" secureTextEntry />
         </Box>
       </VStack>
     </VStack>

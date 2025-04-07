@@ -5,8 +5,8 @@ type InputProps = ComponentProps<typeof InputField>;
 
 export function Input({ ...rest }: InputProps) {
   return (
-    <GluestackInput className="bg-gray-700 h-14 px-4 border-0 rounded-md">
-      <InputField className="color-white" {...rest} />
+    <GluestackInput className="h-14 rounded-md border-2 border-gray-700 bg-gray-700 px-4">
+      <InputField className="text-white" {...rest} />
     </GluestackInput>
   );
 }
