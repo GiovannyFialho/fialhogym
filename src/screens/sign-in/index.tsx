@@ -4,6 +4,7 @@ import { Image } from "@/components/ui/image";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 
+import { Button } from "@/components/button";
 import { Input } from "@/components/input";
 
 import BackgroundImg from "@/assets/background.png";
@@ -38,6 +39,23 @@ export function SignIn() {
           />
 
           <Input placeholder="Senha" secureTextEntry />
+
+          <Button
+            title="Acessar"
+            className="h-14 w-full rounded-sm border-green-300 bg-green-500"
+          />
+        </Box>
+
+        <Box className="mt-4 items-center justify-end">
+          <Text className="mb-3 text-sm font-medium text-gray-100">
+            Ainda não tem acesso?
+          </Text>
+
+          <Button
+            title="Criar conta"
+            variant="outline"
+            className="h-14 w-full rounded-sm border-green-300"
+          />
         </Box>
       </VStack>
     </VStack>
