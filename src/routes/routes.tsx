@@ -1,11 +1,18 @@
-import { NavigationContainer } from "@react-navigation/native";
+import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
+
+import { Box } from "@/components/ui/box";
 
 import { AuthRoutes } from "@/routes/auth.routes";
 
 export function Routes() {
+  const theme = DefaultTheme;
+  theme.colors.background = "#121214";
+
   return (
-    <NavigationContainer>
-      <AuthRoutes />
-    </NavigationContainer>
+    <Box className="flex-1">
+      <NavigationContainer theme={theme}>
+        <AuthRoutes />
+      </NavigationContainer>
+    </Box>
   );
 }
