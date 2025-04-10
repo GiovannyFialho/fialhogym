@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -15,10 +16,18 @@ import { VStack } from "@/components/ui/vstack";
 import { Button } from "@/components/button";
 import { Input } from "@/components/input";
 
+import { type AuthNavigatorRoutesProps } from "@/routes/auth.routes";
+
 import BackgroundImg from "@/assets/background.png";
 import Logo from "@/assets/logo.svg";
 
 export function SignIn() {
+  const navigation = useNavigation<AuthNavigatorRoutesProps>();
+
+  function handleNewAccount() {
+    navigation.navigate("signUp");
+  }
+
   return (
     <KeyboardAvoidingView
       className="flex-1"
@@ -75,6 +84,7 @@ export function SignIn() {
                   title="Criar conta"
                   variant="outline"
                   className="h-14 w-full rounded-sm border-green-300"
+                  onPress={handleNewAccount}
                 />
               </Box>
             </VStack>

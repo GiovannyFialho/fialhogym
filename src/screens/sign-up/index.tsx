@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -19,6 +20,12 @@ import BackgroundImg from "@/assets/background.png";
 import Logo from "@/assets/logo.svg";
 
 export function SignUp() {
+  const navigation = useNavigation();
+
+  function handleGoBack() {
+    navigation.goBack();
+  }
+
   return (
     <KeyboardAvoidingView
       className="flex-1"
@@ -72,6 +79,7 @@ export function SignUp() {
                 title="Voltar para o login"
                 variant="outline"
                 className="h-14 w-full rounded-sm border-green-300"
+                onPress={handleGoBack}
               />
             </VStack>
           </VStack>
