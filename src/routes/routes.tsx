@@ -2,7 +2,7 @@ import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
 
 import { Box } from "@/components/ui/box";
 
-import { AuthRoutes } from "@/routes/auth.routes";
+import { AppRoutes } from "@/routes/app.routes";
 
 export function Routes() {
   const theme = DefaultTheme;
@@ -11,7 +11,7 @@ export function Routes() {
   return (
     <Box className="flex-1">
       <NavigationContainer theme={theme}>
-        <AuthRoutes />
+        <AppRoutes />
       </NavigationContainer>
     </Box>
   );
