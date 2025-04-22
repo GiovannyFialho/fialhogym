@@ -15,6 +15,7 @@ module.exports = {
     extend: {
       colors: {
         darkGray: "#202024",
+        defaultGray: "#29292E",
         primary: {
           0: "rgb(var(--color-primary-0)/<alpha-value>)",
           50: "rgb(var(--color-primary-50)/<alpha-value>)",

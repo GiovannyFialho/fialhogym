@@ -1,10 +1,14 @@
 import { useState } from "react";
+import { FlatList } from "react-native";
 
+import { Heading } from "@/components/ui/heading";
+import { HStack } from "@/components/ui/hstack";
+import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 
+import { ExerciseCard } from "@/components/exercise-card";
 import { Group } from "@/components/group";
 import { HomeHeader } from "@/components/home-header";
-import { FlatList } from "react-native";
 
 export function Home() {
   const [groups, setGroups] = useState([
@@ -36,6 +40,18 @@ export function Home() {
           />
         )}
       />
+
+      <VStack className="px-8">
+        <HStack className="mb-5 items-center justify-between">
+          <Heading className="text-base font-bold text-gray-200">
+            Exercícios
+          </Heading>
+
+          <Text className="text-sm font-normal text-gray-200">4</Text>
+        </HStack>
+
+        <ExerciseCard />
+      </VStack>
     </VStack>
   );
 }
