@@ -1,5 +1,8 @@
+import { LogOut } from "lucide-react-native";
+
 import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
+import { Icon } from "@/components/ui/icon";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 
@@ -15,10 +18,12 @@ export function HomeHeader() {
         alt="Imagem do usuário"
       />
 
-      <VStack>
+      <VStack className="flex-1">
         <Text className="text-sm text-gray-100">Olá, </Text>
         <Heading className="text-base text-gray-100">Giovanny Fialho</Heading>
       </VStack>
+
+      <Icon as={LogOut} className="color-gray-200" size="xl" />
     </HStack>
   );
 }
