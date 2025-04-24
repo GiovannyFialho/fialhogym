@@ -8,12 +8,12 @@ import { Image } from "@/components/ui/image";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 
-type ExerciseCardProps = TouchableOpacityProps;
+type ExerciseCardProps = TouchableOpacityProps & {};
 
 export function ExerciseCard({ ...rest }: ExerciseCardProps) {
   return (
     <TouchableOpacity {...rest}>
-      <HStack className="bg-defaultGray mb-3 items-center rounded-md p-2 pr-4">
+      <HStack className="mb-3 items-center rounded-md bg-defaultGray p-2 pr-4">
         <Image
           source={{
             uri: "https://static.wixstatic.com/media/2edbed_60c206e178ad4eb3801f4f47fc6523df~mv2.webp/v1/fill/w_350,h_375,al_c/2edbed_60c206e178ad4eb3801f4f47fc6523df~mv2.webp",
