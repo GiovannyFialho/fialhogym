@@ -69,10 +69,7 @@ export function SignUp() {
 
                 <Input placeholder="Senha" secureTextEntry />
 
-                <Button
-                  title="Criar e acessar"
-                  className="h-14 w-full rounded-sm border-green-300 bg-green-500"
-                />
+                <Button title="Criar e acessar" />
               </Box>
 
               <Button

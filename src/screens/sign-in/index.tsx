@@ -69,10 +69,7 @@ export function SignIn() {
 
                 <Input placeholder="Senha" secureTextEntry />
 
-                <Button
-                  title="Acessar"
-                  className="h-14 w-full rounded-sm border-green-300 bg-green-500"
-                />
+                <Button title="Acessar" />
               </Box>
 
               <Box className="mt-4 items-center justify-end">
@@ -83,7 +80,6 @@ export function SignIn() {
                 <Button
                   title="Criar conta"
                   variant="outline"
-                  className="h-14 w-full rounded-sm border-green-300"
                   onPress={handleNewAccount}
                 />
               </Box>
