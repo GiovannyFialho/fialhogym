@@ -1,5 +1,7 @@
+import * as FileSystem from "expo-file-system";
 import * as ImagePicker from "expo-image-picker";
-import { ScrollView, TouchableOpacity } from "react-native";
+import { useState } from "react";
+import { Alert, ScrollView, TouchableOpacity } from "react-native";
 
 import { Box } from "@/components/ui/box";
 import { Heading } from "@/components/ui/heading";
@@ -10,7 +12,6 @@ import { Button } from "@/components/button";
 import { Input } from "@/components/input";
 import { ScreenHeader } from "@/components/screen-header";
 import { UserPhoto } from "@/components/user-photo";
-import { useState } from "react";
 
 export function Profile() {
   const [userPhoto, setUserPhoto] = useState(
@@ -18,17 +19,35 @@ export function Profile() {
   );
 
   async function handleUserPhotoSelect() {
-    const photoSelected = await ImagePicker.launchImageLibraryAsync({
-      quality: 1,
-      aspect: [4, 4],
-      allowsEditing: true,
-    });
+    try {
+      const photoSelected = await ImagePicker.launchImageLibraryAsync({
+        quality: 1,
+        aspect: [4, 4],
+        allowsEditing: true,
+      });
 
-    if (photoSelected.canceled) {
-      return;
+      if (photoSelected.canceled) {
+        return;
+      }
+
+      const photoURI = photoSelected.assets[0].uri;
+
+      if (photoURI) {
+        const photoInfo = (await FileSystem.getInfoAsync(photoURI)) as {
+          size: number;
+        };
+
+        if (photoInfo.size && photoInfo.size / 1024 / 1024 > 5) {
+          return Alert.alert(
+            "Essa imagem é muito grande, escolha uma de até 5MB",
+          );
+        }
+
+        setUserPhoto(photoURI);
+      }
+    } catch (err) {
+      console.log(`Error:: `, err);
     }
-
-    setUserPhoto(photoSelected.assets[0].uri);
   }
 
   return (
