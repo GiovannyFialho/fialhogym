@@ -1,3 +1,4 @@
+import * as ImagePicker from "expo-image-picker";
 import { ScrollView, TouchableOpacity } from "react-native";
 
 import { Box } from "@/components/ui/box";
@@ -9,8 +10,27 @@ import { Button } from "@/components/button";
 import { Input } from "@/components/input";
 import { ScreenHeader } from "@/components/screen-header";
 import { UserPhoto } from "@/components/user-photo";
+import { useState } from "react";
 
 export function Profile() {
+  const [userPhoto, setUserPhoto] = useState(
+    "https://github.com/GiovannyFialho.png",
+  );
+
+  async function handleUserPhotoSelect() {
+    const photoSelected = await ImagePicker.launchImageLibraryAsync({
+      quality: 1,
+      aspect: [4, 4],
+      allowsEditing: true,
+    });
+
+    if (photoSelected.canceled) {
+      return;
+    }
+
+    setUserPhoto(photoSelected.assets[0].uri);
+  }
+
   return (
     <VStack className="flex-1">
       <ScreenHeader title="Perfil" />
@@ -18,12 +38,12 @@ export function Profile() {
       <ScrollView contentContainerStyle={{ paddingBottom: 36 }}>
         <Box className="mt-6 items-center justify-center px-10">
           <UserPhoto
-            source={{ uri: "https://github.com/GiovannyFialho.png" }}
+            source={{ uri: userPhoto }}
             alt="Foto do usuário"
             size="lg"
           />
 
-          <TouchableOpacity>
+          <TouchableOpacity onPress={handleUserPhotoSelect}>
             <Text className="mb-8 mt-2 text-base font-bold text-green-500">
               Alterar foto
             </Text>
