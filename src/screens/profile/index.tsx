@@ -72,7 +72,7 @@ export function Profile() {
           <UserPhoto
             source={{ uri: userPhoto }}
             alt="Foto do usuário"
-            size="lg"
+            size="xl"
           />
 
           <TouchableOpacity onPress={handleUserPhotoSelect}>
