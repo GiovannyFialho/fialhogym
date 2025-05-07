@@ -29,15 +29,14 @@ export function Input({
   };
 
   return (
-    <FormControl isInvalid={invalid} className="w-full">
+    <FormControl isInvalid={invalid} className="mb-4 w-full">
       <GluestackInput
         style={containerStyle}
         className={`h-[56px] rounded-lg border-2 ${isReadOnly ? "opacity-50" : "opacity-100"}`}
         isReadOnly={isReadOnly}
       >
         <InputField
-          className="text-w bg-darkGray px-4"
-          style={{ color: "#ffffff" }}
+          className="text-w bg-darkGray px-4 color-white"
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           {...rest}

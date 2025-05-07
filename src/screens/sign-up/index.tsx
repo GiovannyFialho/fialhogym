@@ -63,7 +63,6 @@ export function SignUp() {
 
   function handleSignUp(data: FormDataProps) {
     console.log({ data });
-
     reset();
   }
 
@@ -78,7 +77,7 @@ export function SignUp() {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          <VStack>
+          <VStack className="flex-1">
             <Image
               className="absolute h-[624px] w-full"
               source={BackgroundImg}
@@ -86,7 +85,7 @@ export function SignUp() {
               defaultSource={BackgroundImg}
             />
 
-            <VStack className="px-10 pb-16">
+            <VStack className="flex-1 px-10 pb-16">
               <Box className="my-24 items-center justify-center">
                 <Logo />
 
@@ -95,7 +94,7 @@ export function SignUp() {
                 </Text>
               </Box>
 
-              <Box className="my-24 items-center justify-center gap-2">
+              <Box className="flex-1 items-center justify-center gap-2">
                 <Heading className="text-2xl text-gray-100">
                   Crie sua conta
                 </Heading>
@@ -107,6 +106,7 @@ export function SignUp() {
                     <Input
                       value={value}
                       placeholder="Nome"
+                      returnKeyType="next"
                       onChangeText={onChange}
                       errorMessage={errors.name?.message}
                     />
@@ -122,6 +122,7 @@ export function SignUp() {
                       placeholder="E-mail"
                       keyboardType="email-address"
                       autoCapitalize="none"
+                      returnKeyType="next"
                       onChangeText={onChange}
                       errorMessage={errors.email?.message}
                     />
@@ -136,6 +137,7 @@ export function SignUp() {
                       value={value}
                       placeholder="Senha"
                       secureTextEntry
+                      returnKeyType="next"
                       onChangeText={onChange}
                       errorMessage={errors.password?.message}
                     />
@@ -150,10 +152,10 @@ export function SignUp() {
                       value={value}
                       placeholder="Confirme a senha"
                       secureTextEntry
-                      onChangeText={onChange}
-                      onSubmitEditing={handleSubmit(handleSignUp)}
                       returnKeyType="send"
+                      onChangeText={onChange}
                       errorMessage={errors.password_confirm?.message}
+                      onSubmitEditing={handleSubmit(handleSignUp)}
                     />
                   )}
                 />
@@ -164,11 +166,13 @@ export function SignUp() {
                 />
               </Box>
 
-              <Button
-                title="Voltar para o login"
-                variant="outline"
-                onPress={handleGoBack}
-              />
+              <Box className="mt-4">
+                <Button
+                  title="Voltar para o login"
+                  variant="outline"
+                  onPress={handleGoBack}
+                />
+              </Box>
             </VStack>
           </VStack>
         </ScrollView>
