@@ -12,6 +12,7 @@
     "@expo-google-fonts/roboto": "^0.3.0",
     "@expo/html-elements": "^0.4.2",
     "@gluestack-ui/button": "^1.0.14",
+    "@gluestack-ui/form-control": "^0.1.19",
     "@gluestack-ui/icon": "^0.1.27",
     "@gluestack-ui/image": "^0.1.17",
     "@gluestack-ui/input": "^0.1.38",
@@ -20,6 +21,7 @@
     "@gluestack-ui/pressable": "^0.1.23",
     "@gluestack-ui/spinner": "^0.1.15",
     "@gluestack-ui/toast": "^1.0.9",
+    "@hookform/resolvers": "^5.0.1",
     "@legendapp/motion": "^2.4.0",
     "@react-navigation/bottom-tabs": "^7.3.10",
     "@react-navigation/native": "^7.0.15",
@@ -34,13 +36,15 @@
     "nativewind": "^4.1.23",
     "react": "19.0.0",
     "react-dom": "19.0.0",
+    "react-hook-form": "^7.56.2",
     "react-native": "0.79.2",
     "react-native-css-interop": "^0.1.22",
     "react-native-reanimated": "^3.17.2",
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.10.0",
     "react-native-svg": "^15.2.0",
-    "tailwindcss": "^3.4.17"
+    "tailwindcss": "^3.4.17",
+    "zod": "^3.24.4"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

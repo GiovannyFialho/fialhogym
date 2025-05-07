@@ -1,31 +1,54 @@
-import { Input as GluestackInput, InputField } from "@/components/ui/input";
 import { ComponentProps, useState } from "react";
 import { ViewStyle } from "react-native";
 
+import {
+  FormControl,
+  FormControlError,
+  FormControlErrorText,
+} from "@/components/ui/form-control";
+import { Input as GluestackInput, InputField } from "@/components/ui/input";
+
 type InputProps = ComponentProps<typeof InputField> & {
   isReadOnly?: boolean;
+  isInvalid?: boolean;
+  errorMessage?: string | null;
 };
 
-export function Input({ isReadOnly = false, ...rest }: InputProps) {
+export function Input({
+  isReadOnly = false,
+  isInvalid = false,
+  errorMessage = null,
+  ...rest
+}: InputProps) {
   const [isFocused, setIsFocused] = useState(false);
 
+  const invalid = !!errorMessage || isInvalid;
+
   const containerStyle: ViewStyle = {
-    borderColor: isFocused ? "#4ade80" : "#374151", // green-400 ou gray-700
+    borderColor: isFocused ? "#4ade80" : "#202024", // green-400 ou darkGray
   };
 
   return (
-    <GluestackInput
-      style={containerStyle}
-      className={`h-[56px] rounded-lg border-2 ${isReadOnly ? "opacity-50" : "opacity-100"}`}
-      isReadOnly={isReadOnly}
-    >
-      <InputField
-        className="text-w bg-slate-700 px-4"
-        style={{ color: "#ffffff" }}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
-        {...rest}
-      />
-    </GluestackInput>
+    <FormControl isInvalid={invalid} className="w-full">
+      <GluestackInput
+        style={containerStyle}
+        className={`h-[56px] rounded-lg border-2 ${isReadOnly ? "opacity-50" : "opacity-100"}`}
+        isReadOnly={isReadOnly}
+      >
+        <InputField
+          className="text-w bg-darkGray px-4"
+          style={{ color: "#ffffff" }}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          {...rest}
+        />
+      </GluestackInput>
+
+      <FormControlError>
+        <FormControlErrorText className="color-red-500">
+          {errorMessage}
+        </FormControlErrorText>
+      </FormControlError>
+    </FormControl>
   );
 }

@@ -1,4 +1,6 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigation } from "@react-navigation/native";
+import { Controller, useForm } from "react-hook-form";
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -6,6 +8,7 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
 } from "react-native";
+import { z } from "zod";
 
 import { Box } from "@/components/ui/box";
 import { Heading } from "@/components/ui/heading";
@@ -19,11 +22,49 @@ import { Input } from "@/components/input";
 import BackgroundImg from "@/assets/background.png";
 import Logo from "@/assets/logo.svg";
 
+const formDataSchema = z
+  .object({
+    name: z.string().min(1, "Nome é obrigatório"),
+    email: z
+      .string()
+      .min(1, "E-mail é obrigatório")
+      .regex(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i, "E-mail inválido"),
+    password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres"),
+    password_confirm: z.string().min(6, "Confirme sua senha"),
+  })
+  .refine((data) => data.password === data.password_confirm, {
+    path: ["password_confirm"],
+    message: "As senhas não coincidem",
+  });
+
+type FormDataProps = z.infer<typeof formDataSchema>;
+
 export function SignUp() {
   const navigation = useNavigation();
 
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormDataProps>({
+    resolver: zodResolver(formDataSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      password_confirm: "",
+    },
+  });
+
   function handleGoBack() {
     navigation.goBack();
+  }
+
+  function handleSignUp(data: FormDataProps) {
+    console.log({ data });
+
+    reset();
   }
 
   return (
@@ -59,23 +100,73 @@ export function SignUp() {
                   Crie sua conta
                 </Heading>
 
-                <Input placeholder="Nome" />
-
-                <Input
-                  placeholder="E-mail"
-                  keyboardType="email-address"
-                  autoCapitalize="none"
+                <Controller
+                  control={control}
+                  name="name"
+                  render={({ field: { value, onChange } }) => (
+                    <Input
+                      value={value}
+                      placeholder="Nome"
+                      onChangeText={onChange}
+                      errorMessage={errors.name?.message}
+                    />
+                  )}
                 />
 
-                <Input placeholder="Senha" secureTextEntry />
+                <Controller
+                  control={control}
+                  name="email"
+                  render={({ field: { value, onChange } }) => (
+                    <Input
+                      value={value}
+                      placeholder="E-mail"
+                      keyboardType="email-address"
+                      autoCapitalize="none"
+                      onChangeText={onChange}
+                      errorMessage={errors.email?.message}
+                    />
+                  )}
+                />
 
-                <Button title="Criar e acessar" />
+                <Controller
+                  control={control}
+                  name="password"
+                  render={({ field: { value, onChange } }) => (
+                    <Input
+                      value={value}
+                      placeholder="Senha"
+                      secureTextEntry
+                      onChangeText={onChange}
+                      errorMessage={errors.password?.message}
+                    />
+                  )}
+                />
+
+                <Controller
+                  control={control}
+                  name="password_confirm"
+                  render={({ field: { value, onChange } }) => (
+                    <Input
+                      value={value}
+                      placeholder="Confirme a senha"
+                      secureTextEntry
+                      onChangeText={onChange}
+                      onSubmitEditing={handleSubmit(handleSignUp)}
+                      returnKeyType="send"
+                      errorMessage={errors.password_confirm?.message}
+                    />
+                  )}
+                />
+
+                <Button
+                  title="Criar e acessar"
+                  onPress={handleSubmit(handleSignUp)}
+                />
               </Box>
 
               <Button
                 title="Voltar para o login"
                 variant="outline"
-                className="h-14 w-full rounded-sm border-green-300"
                 onPress={handleGoBack}
               />
             </VStack>
