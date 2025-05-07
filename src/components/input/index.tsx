@@ -25,7 +25,7 @@ export function Input({
   const invalid = !!errorMessage || isInvalid;
 
   const containerStyle: ViewStyle = {
-    borderColor: isFocused ? "#4ade80" : "#202024", // green-400 ou darkGray
+    borderColor: invalid ? "#ef4444" : isFocused ? "#4ade80" : "#202024", // red-500 / green-400 / darkGray
   };
 
   return (
