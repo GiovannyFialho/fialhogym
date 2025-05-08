@@ -1,4 +1,6 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigation } from "@react-navigation/native";
+import { Controller, useForm } from "react-hook-form";
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -6,6 +8,7 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
 } from "react-native";
+import { z } from "zod";
 
 import { Box } from "@/components/ui/box";
 import { Heading } from "@/components/ui/heading";
@@ -21,8 +24,37 @@ import { type AuthNavigatorRoutesProps } from "@/routes/auth.routes";
 import BackgroundImg from "@/assets/background.png";
 import Logo from "@/assets/logo.svg";
 
+const formDataSchema = z.object({
+  email: z
+    .string()
+    .min(1, "E-mail é obrigatório")
+    .regex(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i, "E-mail inválido"),
+  password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres"),
+});
+
+type FormDataProps = z.infer<typeof formDataSchema>;
+
 export function SignIn() {
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
+
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormDataProps>({
+    resolver: zodResolver(formDataSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  function handleSignIn(data: FormDataProps) {
+    console.log({ data });
+
+    reset();
+  }
 
   function handleNewAccount() {
     navigation.navigate("signUp");
@@ -61,15 +93,36 @@ export function SignIn() {
                   Acesse a conta
                 </Heading>
 
-                <Input
-                  placeholder="E-mail"
-                  keyboardType="email-address"
-                  autoCapitalize="none"
+                <Controller
+                  control={control}
+                  name="email"
+                  render={({ field: { value, onChange } }) => (
+                    <Input
+                      value={value}
+                      placeholder="E-mail"
+                      keyboardType="email-address"
+                      autoCapitalize="none"
+                      onChangeText={onChange}
+                      errorMessage={errors.email?.message}
+                    />
+                  )}
                 />
 
-                <Input placeholder="Senha" secureTextEntry />
+                <Controller
+                  control={control}
+                  name="password"
+                  render={({ field: { value, onChange } }) => (
+                    <Input
+                      value={value}
+                      placeholder="Senha"
+                      secureTextEntry
+                      onChangeText={onChange}
+                      errorMessage={errors.password?.message}
+                    />
+                  )}
+                />
 
-                <Button title="Acessar" />
+                <Button title="Acessar" onPress={handleSubmit(handleSignIn)} />
               </Box>
 
               <Box className="mt-4 items-center justify-end">
