@@ -10,6 +10,8 @@ import {
 } from "react-native";
 import { z } from "zod";
 
+import { api } from "@/service/api";
+
 import { Box } from "@/components/ui/box";
 import { Heading } from "@/components/ui/heading";
 import { Image } from "@/components/ui/image";
@@ -61,19 +63,23 @@ export function SignUp() {
     navigation.goBack();
   }
 
-  async function handleSignUp(data: FormDataProps) {
-    const { name, email, password } = data;
+  async function handleSignUp({ name, email, password }: FormDataProps) {
+    const response = await api.post("/users", { name, email, password });
+    console.log(response.data);
 
-    fetch(`http://192.168.68.108:3333/users`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name, email, password }),
-    });
+    // const response = await fetch(`http://192.168.68.108:3333/users`, {
+    //   method: "POST",
+    //   headers: {
+    //     Accept: "application/json",
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({ name, email, password }),
+    // });
 
-    console.log("Enviado!!");
+    // const data = await response.json();
+
+    // console.log(data);
+
     reset();
   }
 
