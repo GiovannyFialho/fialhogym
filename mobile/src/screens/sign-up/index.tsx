@@ -11,15 +11,18 @@ import {
 import { z } from "zod";
 
 import { api } from "@/service/api";
+import { AppError } from "@/utils/app-error";
 
 import { Box } from "@/components/ui/box";
 import { Heading } from "@/components/ui/heading";
 import { Image } from "@/components/ui/image";
 import { Text } from "@/components/ui/text";
+import { useToast } from "@/components/ui/toast";
 import { VStack } from "@/components/ui/vstack";
 
 import { Button } from "@/components/button";
 import { Input } from "@/components/input";
+import { ToastMessage } from "@/components/toast-message";
 
 import BackgroundImg from "@/assets/background.png";
 import Logo from "@/assets/logo.svg";
@@ -43,6 +46,7 @@ type FormDataProps = z.infer<typeof formDataSchema>;
 
 export function SignUp() {
   const navigation = useNavigation();
+  const toast = useToast();
 
   const {
     control,
@@ -64,23 +68,27 @@ export function SignUp() {
   }
 
   async function handleSignUp({ name, email, password }: FormDataProps) {
-    const response = await api.post("/users", { name, email, password });
-    console.log(response.data);
+    try {
+      await api.post("/users", { name, email, password });
+      reset();
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const title = isAppError
+        ? error.message
+        : "Não foi possível criar a conta. Tente novamente mais tarde";
 
-    // const response = await fetch(`http://192.168.68.108:3333/users`, {
-    //   method: "POST",
-    //   headers: {
-    //     Accept: "application/json",
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({ name, email, password }),
-    // });
-
-    // const data = await response.json();
-
-    // console.log(data);
-
-    reset();
+      toast.show({
+        placement: "top",
+        render: ({ id }) => (
+          <ToastMessage
+            id={id}
+            title={title}
+            action="error"
+            onClose={() => toast.close(id)}
+          />
+        ),
+      });
+    }
   }
 
   return (
