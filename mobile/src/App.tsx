@@ -14,6 +14,8 @@ import {
 
 import "../global.css";
 
+import { AuthContextProvider } from "@/contexts/auth-context";
+
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 
 import { Loading } from "@/components/loading";
@@ -34,7 +36,9 @@ export function App() {
             translucent
           />
 
-          {fontsLoaded ? <Routes /> : <Loading />}
+          <AuthContextProvider>
+            {fontsLoaded ? <Routes /> : <Loading />}
+          </AuthContextProvider>
         </GluestackUIProvider>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
