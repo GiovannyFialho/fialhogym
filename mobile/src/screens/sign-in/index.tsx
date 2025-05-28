@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigation } from "@react-navigation/native";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
   Keyboard,
@@ -10,14 +11,19 @@ import {
 } from "react-native";
 import { z } from "zod";
 
+import { useAuth } from "@/hooks/useAuth";
+import { AppError } from "@/utils/app-error";
+
 import { Box } from "@/components/ui/box";
 import { Heading } from "@/components/ui/heading";
 import { Image } from "@/components/ui/image";
 import { Text } from "@/components/ui/text";
+import { useToast } from "@/components/ui/toast";
 import { VStack } from "@/components/ui/vstack";
 
 import { Button } from "@/components/button";
 import { Input } from "@/components/input";
+import { ToastMessage } from "@/components/toast-message";
 
 import { type AuthNavigatorRoutesProps } from "@/routes/auth.routes";
 
@@ -35,12 +41,16 @@ const formDataSchema = z.object({
 type FormDataProps = z.infer<typeof formDataSchema>;
 
 export function SignIn() {
+  const [isLoading, setIsLoading] = useState(false);
+
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
+
+  const { signIn } = useAuth();
+  const toast = useToast();
 
   const {
     control,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm<FormDataProps>({
     resolver: zodResolver(formDataSchema),
@@ -50,10 +60,31 @@ export function SignIn() {
     },
   });
 
-  function handleSignIn(data: FormDataProps) {
-    console.log({ data });
+  async function handleSignIn({ email, password }: FormDataProps) {
+    try {
+      setIsLoading(true);
+      await signIn(email, password);
+    } catch (error) {
+      const isAppError = error instanceof AppError;
 
-    reset();
+      const title = isAppError
+        ? error.message
+        : "Não foi possível entrar. Tente novamente mais tarde";
+
+      toast.show({
+        placement: "top",
+        render: ({ id }) => (
+          <ToastMessage
+            id={id}
+            title={title}
+            action="error"
+            onClose={() => toast.close(id)}
+          />
+        ),
+      });
+
+      setIsLoading(false);
+    }
   }
 
   function handleNewAccount() {
@@ -122,7 +153,11 @@ export function SignIn() {
                   )}
                 />
 
-                <Button title="Acessar" onPress={handleSubmit(handleSignIn)} />
+                <Button
+                  title="Acessar"
+                  isLoading={isLoading}
+                  onPress={handleSubmit(handleSignIn)}
+                />
               </Box>
 
               <Box className="mt-4 items-center justify-end">
