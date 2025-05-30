@@ -147,8 +147,10 @@ export function SignIn() {
                       value={value}
                       placeholder="Senha"
                       secureTextEntry
+                      returnKeyType="send"
                       onChangeText={onChange}
                       errorMessage={errors.password?.message}
+                      onSubmitEditing={handleSubmit(handleSignIn)}
                     />
                   )}
                 />

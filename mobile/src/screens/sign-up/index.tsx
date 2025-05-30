@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigation } from "@react-navigation/native";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
   Keyboard,
@@ -10,6 +11,7 @@ import {
 } from "react-native";
 import { z } from "zod";
 
+import { useAuth } from "@/hooks/useAuth";
 import { api } from "@/service/api";
 import { AppError } from "@/utils/app-error";
 
@@ -45,6 +47,9 @@ const formDataSchema = z
 type FormDataProps = z.infer<typeof formDataSchema>;
 
 export function SignUp() {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { signIn } = useAuth();
   const navigation = useNavigation();
   const toast = useToast();
 
@@ -69,9 +74,13 @@ export function SignUp() {
 
   async function handleSignUp({ name, email, password }: FormDataProps) {
     try {
+      setIsLoading(true);
+
       await api.post("/users", { name, email, password });
-      reset();
+      await signIn(email, password);
     } catch (error) {
+      setIsLoading(false);
+
       const isAppError = error instanceof AppError;
       const title = isAppError
         ? error.message
@@ -187,6 +196,7 @@ export function SignUp() {
 
                 <Button
                   title="Criar e acessar"
+                  isLoading={isLoading}
                   onPress={handleSubmit(handleSignUp)}
                 />
               </Box>
