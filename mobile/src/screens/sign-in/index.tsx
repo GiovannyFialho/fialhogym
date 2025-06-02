@@ -45,7 +45,7 @@ export function SignIn() {
 
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
 
-  const { signIn } = useAuth();
+  const { singIn } = useAuth();
   const toast = useToast();
 
   const {
@@ -63,7 +63,7 @@ export function SignIn() {
   async function handleSignIn({ email, password }: FormDataProps) {
     try {
       setIsLoading(true);
-      await signIn(email, password);
+      await singIn(email, password);
     } catch (error) {
       const isAppError = error instanceof AppError;
 

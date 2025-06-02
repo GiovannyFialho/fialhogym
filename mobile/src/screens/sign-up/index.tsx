@@ -49,7 +49,7 @@ type FormDataProps = z.infer<typeof formDataSchema>;
 export function SignUp() {
   const [isLoading, setIsLoading] = useState(false);
 
-  const { signIn } = useAuth();
+  const { singIn } = useAuth();
   const navigation = useNavigation();
   const toast = useToast();
 
@@ -77,7 +77,7 @@ export function SignUp() {
       setIsLoading(true);
 
       await api.post("/users", { name, email, password });
-      await signIn(email, password);
+      await singIn(email, password);
     } catch (error) {
       setIsLoading(false);
 
