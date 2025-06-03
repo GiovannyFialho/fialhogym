@@ -1,26 +1,26 @@
 import { useNavigation } from "@react-navigation/native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FlatList } from "react-native";
 
 import { type NavigationProps } from "@/routes/app.routes";
+import { api } from "@/service/api";
+import { AppError } from "@/utils/app-error";
 
 import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
 import { Text } from "@/components/ui/text";
+import { useToast } from "@/components/ui/toast";
 import { VStack } from "@/components/ui/vstack";
 
 import { ExerciseCard } from "@/components/exercise-card";
 import { Group } from "@/components/group";
 import { HomeHeader } from "@/components/home-header";
+import { ToastMessage } from "@/components/toast-message";
 
 export function Home() {
-  const [groups, setGroups] = useState([
-    "Costas",
-    "Pernas",
-    "Peito",
-    "Bíceps",
-    "Ombro",
-  ]);
+  const toast = useToast();
+
+  const [groups, setGroups] = useState<string[]>([]);
   const [exercises, setExercises] = useState([
     "Puxada frontal",
     "Remada curvada",
@@ -32,9 +32,38 @@ export function Home() {
 
   const navigation = useNavigation<NavigationProps>();
 
+  async function fetchGroups() {
+    try {
+      const response = await api.get("/groups");
+
+      setGroups(response.data);
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const title = isAppError
+        ? error.message
+        : "Não foi possível carregar os grupos. Tente novamente mais tarde";
+
+      toast.show({
+        placement: "top",
+        render: ({ id }) => (
+          <ToastMessage
+            id={id}
+            title={title}
+            action="error"
+            onClose={() => toast.close(id)}
+          />
+        ),
+      });
+    }
+  }
+
   function handleOpenExerciseDetails() {
     navigation.navigate("exercise");
   }
+
+  useEffect(() => {
+    fetchGroups();
+  }, []);
 
   return (
     <VStack className="flex-1">
