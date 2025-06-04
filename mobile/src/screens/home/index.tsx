@@ -128,8 +128,8 @@ export function Home() {
         <FlatList
           data={exercises}
           keyExtractor={(item) => item.id}
-          renderItem={() => (
-            <ExerciseCard onPress={handleOpenExerciseDetails} />
+          renderItem={({ item }) => (
+            <ExerciseCard data={item} onPress={handleOpenExerciseDetails} />
           )}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 20 }}

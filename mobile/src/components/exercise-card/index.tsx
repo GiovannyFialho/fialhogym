@@ -1,6 +1,9 @@
 import { ChevronRight } from "lucide-react-native";
 import { TouchableOpacity, type TouchableOpacityProps } from "react-native";
 
+import { ExerciseDTO } from "@/dtos/exercise-dto";
+import { api } from "@/service/api";
+
 import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
 import { Icon } from "@/components/ui/icon";
@@ -8,15 +11,17 @@ import { Image } from "@/components/ui/image";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 
-type ExerciseCardProps = TouchableOpacityProps & {};
+type ExerciseCardProps = TouchableOpacityProps & {
+  data: ExerciseDTO;
+};
 
-export function ExerciseCard({ ...rest }: ExerciseCardProps) {
+export function ExerciseCard({ data, ...rest }: ExerciseCardProps) {
   return (
     <TouchableOpacity {...rest}>
       <HStack className="mb-3 items-center rounded-md bg-defaultGray p-2 pr-4">
         <Image
           source={{
-            uri: "https://static.wixstatic.com/media/2edbed_60c206e178ad4eb3801f4f47fc6523df~mv2.webp/v1/fill/w_350,h_375,al_c/2edbed_60c206e178ad4eb3801f4f47fc6523df~mv2.webp",
+            uri: `${api.defaults.baseURL}/exercise/thumb/${data.thumb}`,
           }}
           width={64}
           height={64}
@@ -26,16 +31,14 @@ export function ExerciseCard({ ...rest }: ExerciseCardProps) {
 
         <VStack className="flex-1">
           <Heading className="text-lg font-bold text-white">
-            Puxada frontal
+            {data.name}
           </Heading>
 
           <Text
             className="mt-1 text-sm font-normal text-gray-200"
             numberOfLines={2}
           >
-            3 séries x 12 repetições hdiuas iaud iahuda isud asiud aid aiuda
-            isud aisud aiushdai usd aiusd iaushd aius daisu diaushdi aus
-            daiusdai sudhai suhd aisuh disuah diaus hiuds
+            {data.series} séries x {data.repetitions} repetições
           </Text>
         </VStack>
 
