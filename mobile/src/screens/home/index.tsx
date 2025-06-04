@@ -26,7 +26,9 @@ export function Home() {
   const [groups, setGroups] = useState<string[]>([]);
   const [exercises, setExercises] = useState<ExerciseDTO[]>([]);
 
-  const [selectedGroup, setSelectedGroup] = useState<string | null>("costas");
+  const [selectedGroup, setSelectedGroup] = useState<string | null>(
+    "antebraço",
+  );
 
   const navigation = useNavigation<NavigationProps>();
 

@@ -18,6 +18,7 @@ import { useToast } from "@/components/ui/toast";
 import { VStack } from "@/components/ui/vstack";
 
 import { Button } from "@/components/button";
+import { Loading } from "@/components/loading";
 import { ToastMessage } from "@/components/toast-message";
 
 import BodySvg from "@/assets/body.svg";
@@ -35,6 +36,7 @@ export function Exercise() {
 
   const { exerciseId } = route.params as RoutesParamsProps;
 
+  const [isLoading, setIsLoading] = useState(true);
   const [exercise, setExercise] = useState<ExerciseDTO>({} as ExerciseDTO);
 
   function handleGoBack() {
@@ -43,6 +45,8 @@ export function Exercise() {
 
   async function fetchExerciseDetail() {
     try {
+      setIsLoading(true);
+
       const response = await api.get(`/exercises/${exerciseId}`);
       setExercise(response.data);
     } catch (error) {
@@ -62,6 +66,8 @@ export function Exercise() {
           />
         ),
       });
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -91,42 +97,46 @@ export function Exercise() {
         </HStack>
       </VStack>
 
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 32 }}
-      >
-        <VStack className="p-8">
-          <Box className="mb-3 overflow-hidden rounded-lg">
-            <Image
-              source={{
-                uri: `${api.defaults.baseURL}/exercise/demo/${exercise.demo}`,
-              }}
-              alt="Exercicio"
-              className="h-80 w-full object-cover"
-            />
-          </Box>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 32 }}
+        >
+          <VStack className="p-8">
+            <Box className="mb-3 overflow-hidden rounded-lg">
+              <Image
+                source={{
+                  uri: `${api.defaults.baseURL}/exercise/demo/${exercise.demo}`,
+                }}
+                alt="Exercicio"
+                className="h-96 w-full object-cover"
+              />
+            </Box>
 
-          <Box className="rounded-md bg-darkGray px-4 pb-4">
-            <HStack className="mb-6 mt-5 items-center justify-around">
-              <HStack>
-                <SeriesSvg />
-                <Text className="ml-2 text-gray-200">
-                  {exercise.series} séries
-                </Text>
+            <Box className="rounded-md bg-darkGray px-4 pb-4">
+              <HStack className="mb-6 mt-5 items-center justify-around">
+                <HStack>
+                  <SeriesSvg />
+                  <Text className="ml-2 text-gray-200">
+                    {exercise.series} séries
+                  </Text>
+                </HStack>
+
+                <HStack>
+                  <RepetitionsSvg />
+                  <Text className="ml-2 text-gray-200">
+                    {exercise.repetitions} repetições
+                  </Text>
+                </HStack>
               </HStack>
 
-              <HStack>
-                <RepetitionsSvg />
-                <Text className="ml-2 text-gray-200">
-                  {exercise.repetitions} repetições
-                </Text>
-              </HStack>
-            </HStack>
-
-            <Button title="Marcar como realizado" />
-          </Box>
-        </VStack>
-      </ScrollView>
+              <Button title="Marcar como realizado" />
+            </Box>
+          </VStack>
+        </ScrollView>
+      )}
     </VStack>
   );
 }
