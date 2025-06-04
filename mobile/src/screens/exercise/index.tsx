@@ -1,4 +1,4 @@
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { ArrowLeft } from "lucide-react-native";
 import { ScrollView, TouchableOpacity } from "react-native";
 
@@ -18,8 +18,15 @@ import BodySvg from "@/assets/body.svg";
 import RepetitionsSvg from "@/assets/repetitions.svg";
 import SeriesSvg from "@/assets/series.svg";
 
+type RoutesParamsProps = {
+  exerciseId: string;
+};
+
 export function Exercise() {
   const navigation = useNavigation<NavigationProps>();
+  const route = useRoute();
+
+  const { exerciseId } = route.params as RoutesParamsProps;
 
   function handleGoBack() {
     navigation.goBack();

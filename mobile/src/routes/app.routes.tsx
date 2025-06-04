@@ -8,7 +8,7 @@ import { Exercise } from "@/screens/exercise";
 
 type RootStackRoutes = {
   tabs: undefined;
-  exercise: undefined;
+  exercise: { exerciseId: string };
 };
 
 export type NavigationProps = NativeStackNavigationProp<RootStackRoutes>;
