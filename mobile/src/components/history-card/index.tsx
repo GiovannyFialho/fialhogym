@@ -1,9 +1,15 @@
+import { HistoryDTO } from "@/dtos/history-dto";
+
 import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 
-export function HistoryCard() {
+type HistoryCardProps = {
+  data: HistoryDTO;
+};
+
+export function HistoryCard({ data }: HistoryCardProps) {
   return (
     <HStack className="mb-3 w-full items-center justify-between rounded-md bg-darkGray px-5 py-4">
       <VStack className="mr-5 flex-1">
@@ -11,15 +17,15 @@ export function HistoryCard() {
           className="text-base font-bold capitalize text-white"
           numberOfLines={1}
         >
-          Costas
+          {data.group}
         </Heading>
 
         <Text className="text-lg text-gray-100" numberOfLines={1}>
-          Puxada frontal
+          {data.name}
         </Text>
       </VStack>
 
-      <Text className="text-base text-gray-400">08:56</Text>
+      <Text className="text-base text-gray-400">{data.hour}</Text>
     </HStack>
   );
 }
