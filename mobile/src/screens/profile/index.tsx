@@ -1,3 +1,4 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import * as FileSystem from "expo-file-system";
 import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
@@ -6,6 +7,7 @@ import { ScrollView, TouchableOpacity } from "react-native";
 import { z } from "zod";
 
 import { useAuth } from "@/hooks/useAuth";
+import { api } from "@/service/api";
 
 import { Box } from "@/components/ui/box";
 import { Heading } from "@/components/ui/heading";
@@ -18,7 +20,7 @@ import { Input } from "@/components/input";
 import { ScreenHeader } from "@/components/screen-header";
 import { ToastMessage } from "@/components/toast-message";
 import { UserPhoto } from "@/components/user-photo";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { AppError } from "../../utils/app-error";
 
 const formDataSchema = z
   .object({
@@ -41,7 +43,13 @@ const formDataSchema = z
       .optional(),
   })
   .superRefine((data, ctx) => {
-    if (data.password && data.password.length < 6) {
+    const hasPassword = data.password != null && data.password !== "";
+    const hasPasswordConfirm =
+      data.password_confirm != null && data.password_confirm !== "";
+    const hasOldPassword =
+      data.old_password != null && data.old_password !== "";
+
+    if (hasPassword && data.password!.length < 6) {
       ctx.addIssue({
         path: ["password"],
         message: "A senha deve ter pelo menos 6 caracteres",
@@ -49,19 +57,41 @@ const formDataSchema = z
       });
     }
 
-    if (data.password_confirm && data.password_confirm.length < 6) {
+    if (hasPasswordConfirm && data.password_confirm!.length < 6) {
       ctx.addIssue({
         path: ["password_confirm"],
-        message: "Confirme sua senha",
+        message: "Confirme sua senha com pelo menos 6 caracteres",
         code: z.ZodIssueCode.custom,
       });
     }
 
-    if (data.password || data.password_confirm) {
+    if (hasPassword && !hasPasswordConfirm && !hasOldPassword) {
+      ctx.addIssue({
+        path: ["password_confirm"],
+        message: "Confirme sua senha com pelo menos 6 caracteres",
+        code: z.ZodIssueCode.custom,
+      });
+
+      ctx.addIssue({
+        path: ["old_password"],
+        message: "Informe a senha atual para alterar a nova senha",
+        code: z.ZodIssueCode.custom,
+      });
+    }
+
+    if (hasPassword && hasPasswordConfirm) {
       if (data.password !== data.password_confirm) {
         ctx.addIssue({
           path: ["password_confirm"],
           message: "As senhas não coincidem",
+          code: z.ZodIssueCode.custom,
+        });
+      }
+
+      if (!hasOldPassword) {
+        ctx.addIssue({
+          path: ["old_password"],
+          message: "Informe a senha atual para alterar a nova senha",
           code: z.ZodIssueCode.custom,
         });
       }
@@ -71,11 +101,12 @@ const formDataSchema = z
 type FormDataProps = z.infer<typeof formDataSchema>;
 
 export function Profile() {
+  const [isUpdating, setIsUpdating] = useState(false);
   const [userPhoto, setUserPhoto] = useState(
     "https://github.com/GiovannyFialho.png",
   );
 
-  const { user } = useAuth();
+  const { user, updateUserProfile } = useAuth();
   const toast = useToast();
   const {
     control,
@@ -134,7 +165,46 @@ export function Profile() {
   }
 
   async function handleProfileUpdate(data: FormDataProps) {
-    console.log({ data });
+    try {
+      setIsUpdating(true);
+
+      const userUpdated = user;
+      userUpdated.name = data.name;
+
+      await api.put("/users", data);
+      await updateUserProfile(userUpdated);
+
+      toast.show({
+        placement: "top",
+        render: ({ id }) => (
+          <ToastMessage
+            id={id}
+            title="Perfil atualizado com sucesso"
+            action="success"
+            onClose={() => toast.close(id)}
+          />
+        ),
+      });
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const title = isAppError
+        ? error.message
+        : "Não foi possível atualizar dados. Tente novamente mais tarde";
+
+      toast.show({
+        placement: "top",
+        render: ({ id }) => (
+          <ToastMessage
+            id={id}
+            title={title}
+            action="error"
+            onClose={() => toast.close(id)}
+          />
+        ),
+      });
+    } finally {
+      setIsUpdating(false);
+    }
   }
 
   return (
@@ -197,9 +267,15 @@ export function Profile() {
                 <Input
                   value={value}
                   secureTextEntry
+                  textContentType="none"
+                  autoComplete="off"
+                  importantForAutofill="no"
+                  autoCorrect={false}
+                  keyboardType="default"
                   placeholder="Senha antiga"
                   className="bg-darkGray text-white"
                   onChangeText={onChange}
+                  errorMessage={errors.old_password?.message}
                 />
               )}
             />
@@ -211,6 +287,11 @@ export function Profile() {
                 <Input
                   value={value}
                   secureTextEntry
+                  textContentType="none"
+                  autoComplete="off"
+                  importantForAutofill="no"
+                  autoCorrect={false}
+                  keyboardType="default"
                   placeholder="Nova senha"
                   className="bg-darkGray text-white"
                   onChangeText={onChange}
@@ -226,6 +307,11 @@ export function Profile() {
                 <Input
                   value={value}
                   secureTextEntry
+                  textContentType="none"
+                  autoComplete="off"
+                  importantForAutofill="no"
+                  autoCorrect={false}
+                  keyboardType="default"
                   placeholder="Confirme a nova senha"
                   className="bg-darkGray text-white"
                   onChangeText={onChange}
@@ -237,6 +323,7 @@ export function Profile() {
             <Button
               title="Atualizar"
               onPress={handleSubmit(handleProfileUpdate)}
+              isLoading={isUpdating}
             />
           </Box>
         </Box>
