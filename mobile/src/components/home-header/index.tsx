@@ -2,6 +2,7 @@ import { LogOut } from "lucide-react-native";
 import { TouchableOpacity } from "react-native";
 
 import { useAuth } from "@/hooks/useAuth";
+import { api } from "@/service/api";
 
 import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
@@ -19,7 +20,11 @@ export function HomeHeader() {
   return (
     <HStack className="items-center gap-4 bg-darkGray px-8 pb-5 pt-16">
       <UserPhoto
-        source={user.avatar ? { uri: user.avatar } : userPhotoDefault}
+        source={
+          user.avatar
+            ? { uri: `${api.defaults.baseURL}/avatar/${user.avatar}` }
+            : userPhotoDefault
+        }
         width={16}
         height={16}
         alt="Imagem do usuário"

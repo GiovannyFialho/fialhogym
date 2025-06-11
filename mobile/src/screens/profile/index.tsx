@@ -8,6 +8,7 @@ import { z } from "zod";
 
 import { useAuth } from "@/hooks/useAuth";
 import { api } from "@/service/api";
+import { AppError } from "@/utils/app-error";
 
 import { Box } from "@/components/ui/box";
 import { Heading } from "@/components/ui/heading";
@@ -20,7 +21,8 @@ import { Input } from "@/components/input";
 import { ScreenHeader } from "@/components/screen-header";
 import { ToastMessage } from "@/components/toast-message";
 import { UserPhoto } from "@/components/user-photo";
-import { AppError } from "../../utils/app-error";
+
+import userPhotoDefault from "@/assets/userPhotoDefault.png";
 
 const formDataSchema = z
   .object({
@@ -102,9 +104,6 @@ type FormDataProps = z.infer<typeof formDataSchema>;
 
 export function Profile() {
   const [isUpdating, setIsUpdating] = useState(false);
-  const [userPhoto, setUserPhoto] = useState(
-    "https://github.com/GiovannyFialho.png",
-  );
 
   const { user, updateUserProfile } = useAuth();
   const toast = useToast();
@@ -157,7 +156,43 @@ export function Profile() {
           });
         }
 
-        setUserPhoto(photoURI);
+        const fileExtension = photoSelected.assets[0].uri.split(".").pop();
+
+        const photoFile = {
+          name: `${user.name.split(" ")[0]}.${fileExtension}`.toLocaleLowerCase(),
+          uri: photoSelected.assets[0].uri,
+          type: `${photoSelected.assets[0].type}/${fileExtension}`,
+        } as any;
+
+        const userPhotoUploadForm = new FormData();
+        userPhotoUploadForm.append("avatar", photoFile);
+
+        const avatarUpdatedResponse = await api.patch(
+          "/users/avatar",
+          userPhotoUploadForm,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          },
+        );
+
+        toast.show({
+          placement: "top",
+          render: ({ id }) => (
+            <ToastMessage
+              id={id}
+              title="Foto atualizada!"
+              action="success"
+              onClose={() => toast.close(id)}
+            />
+          ),
+        });
+
+        const userUpdated = user;
+        userUpdated.avatar = avatarUpdatedResponse.data.avatar;
+
+        updateUserProfile(userUpdated);
       }
     } catch (err) {
       console.log(`Error:: `, err);
@@ -214,7 +249,11 @@ export function Profile() {
       <ScrollView contentContainerStyle={{ paddingBottom: 36 }}>
         <Box className="mt-6 items-center justify-center px-10">
           <UserPhoto
-            source={{ uri: userPhoto }}
+            source={
+              user.avatar
+                ? { uri: `${api.defaults.baseURL}/avatar/${user.avatar}` }
+                : userPhotoDefault
+            }
             alt="Foto do usuário"
             size="xl"
           />
